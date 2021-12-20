@@ -19,6 +19,7 @@ const protectRoute = asyncHandler(async(req,res,next)=>{
         } catch (error) {
             console.log(`Error at middleware: ${error}`);
             res.status(401);
+            res.send(decoded.id)
             throw new Error('Unauthorised. Token Failed');
         }
         
