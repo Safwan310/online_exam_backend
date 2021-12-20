@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import userRoute from "./routes/userRoutes.js";
 import mongoose from "mongoose"
+import { notFound,errorHandler } from "./middleware/errorMiddleware.js";
+import adminRoute from './routes/adminRoutes.js';
 dotenv.config();
 
 const app = express();
@@ -12,6 +14,10 @@ app.use(express.urlencoded({
 }))
 
 app.use("/users",userRoute)
+app.use("/admin",adminRoute)
+app.use(notFound)
+
+app.use(errorHandler)
 
 const port = process.env.PORT || 8080;
 

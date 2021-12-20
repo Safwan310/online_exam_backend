@@ -20,16 +20,21 @@ const registerUser = asyncHandler(async(req,res)=>{
 })
 
 const loginUser = asyncHandler(async(req,res)=>{
-    const { email,password } = req.body;
+    const { email,password,isAdmin } = req.body;
 
     const user = await User.findOne({email: email})
-
     if(user && await user.matchPassword(password)){
-        res.json({
+        if((req.originalUrl.startsWith("/admin")&&isAdmin)||
+        (req.originalUrl.startsWith("/users")&&!(isAdmin)))
+        {res.json({
             name: user.name,
             email: user.email,
             token: generateToken(user._id)
-        })
+        })}
+        else{
+            res.status(401);
+            res.send("Unauthorised");
+        }
     }
     else{
         res.status(401);
@@ -37,4 +42,21 @@ const loginUser = asyncHandler(async(req,res)=>{
     }
 })
 
-export { registerUser, loginUser }
+const getSubjects = asyncHandler(async(req,res)=>{
+    const user = await User.findById(req.user._id)
+
+    if(user){
+        res.json({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+        })
+    }
+    else{
+        res.status(404);
+        throw new Error('User not found');
+    }
+})
+
+export { registerUser, loginUser, getSubjects }
