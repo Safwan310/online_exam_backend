@@ -12,12 +12,14 @@ app.use(express.json())
 app.use(express.urlencoded({
     extended:true
 }))
-
-app.use("/users",userRoute)
 app.use("/admin",adminRoute)
+app.use("/users",userRoute)
+
 app.use(notFound)
 
 app.use(errorHandler)
+
+
 
 const port = process.env.PORT || 8080;
 

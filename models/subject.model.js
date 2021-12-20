@@ -4,7 +4,7 @@ const subjectSchema = new mongoose.Schema({
     subjectName:{
         type:String,
         required:true
-    }
+    },
     subjectImageUrl:{
         type:String,
         required:true

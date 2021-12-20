@@ -1,14 +1,12 @@
 import express from "express";
 import { loginUser, registerUser } from "../controllers/userController.js";
-
-const adminController = require('./../controllers/adminController');
+import { createTest,createSubject } from "../controllers/adminController.js";
 
 const adminRoute = express.Router();
 
-adminRoute.post("/createTests", adminController.createTests);
-adminRoute.post("/createSubjects", adminController.createSubject);
-
 adminRoute.post("/register", registerUser);
 adminRoute.get("/login", loginUser);
+adminRoute.post("/createTest",createTest);
+adminRoute.post("/createSubject",createSubject);
 
 export default adminRoute;

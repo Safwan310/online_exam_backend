@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
+import Subject from "../models/subject.model.js";
+import Test from "../models/test.model.js";
 //CHECK FOR PRE EXISTING USERZZ
 const registerUser = asyncHandler(async(req,res)=>{
     const newUser = new User({
@@ -43,20 +45,28 @@ const loginUser = asyncHandler(async(req,res)=>{
 })
 
 const getSubjects = asyncHandler(async(req,res)=>{
-    const user = await User.findById(req.user._id)
+    const subs = await Subject.find({})
 
-    if(user){
-        res.json({
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            isAdmin: user.isAdmin,
-        })
+    if(subs){
+        res.send(subs)
     }
     else{
-        res.status(404);
-        throw new Error('User not found');
+        res.status(500);
+        throw new Error('Internal error: At fetching subjects');
     }
 })
 
-export { registerUser, loginUser, getSubjects }
+const getTests = asyncHandler(async(req,res)=>{
+    const { subject } = req.body;
+
+    const tests = await Test.find({subjectName:subject})
+
+    if(tests.length > 0){
+        res.send(tests);
+    }
+    else{
+        res.status(404);
+        throw new Error('Subject not found')
+    }
+})
+export { registerUser, loginUser, getSubjects, getTests }
