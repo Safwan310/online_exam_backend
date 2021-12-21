@@ -12,5 +12,5 @@ const feedSchema = new mongoose.Schema({
     },
 })
 
-const feedbackForm = mongoose.model8("forms", feedSchema);
+const feedbackForm = mongoose.model("forms", feedSchema);
 export default feedbackForm;
