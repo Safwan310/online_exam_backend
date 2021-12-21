@@ -69,4 +69,18 @@ const getTests = asyncHandler(async(req,res)=>{
         throw new Error('Subject not found')
     }
 })
-export { registerUser, loginUser, getSubjects, getTests }
+
+const getIndividualTest = asyncHandler(async(req,res)=>{
+    const { subject, testName } = req.body;
+
+    const test = await Test.findOne({$and:[{subjectName:subject},{testName:testName}]})
+
+    if(test){
+        res.send(test);
+    }
+    else{
+        res.status(404);
+        throw new Error("Test not found");
+    }
+})
+export { registerUser, loginUser, getSubjects, getTests, getIndividualTest }
