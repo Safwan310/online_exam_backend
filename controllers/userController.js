@@ -3,6 +3,8 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import Subject from "../models/subject.model.js";
 import Test from "../models/test.model.js";
+import jwt from "jsonwebtoken";
+import Marks from "../models/marks.model.js";
 //CHECK FOR PRE EXISTING USERZZ
 const registerUser = asyncHandler(async(req,res)=>{
     const newUser = new User({
@@ -83,4 +85,42 @@ const getIndividualTest = asyncHandler(async(req,res)=>{
         throw new Error("Test not found");
     }
 })
-export { registerUser, loginUser, getSubjects, getTests, getIndividualTest }
+
+const submitTestAnswers = asyncHandler(async(req,res)=>{
+    const token = req.headers.authorization;
+    if(token && token.startsWith("Bearer")){
+        let decoded = jwt.verify(token.split(" ")[1],process.env.JWT_SECRET)
+        console.log(decoded)
+        try {
+            const user = await User.findById(decoded.id).select("-password");
+            const newMarks = new Marks({
+                studentName:user.name,
+                studentId:user._id,
+                subjectName:req.body.subject,
+                testName:req.body.testName,
+                marks:req.body.marks
+            })
+
+            newMarks.save()
+            .then(()=>{
+                res.status(200);
+                res.send("Test submitted and marks added")
+            })
+            .catch((err)=>{
+                res.status(500);
+                throw new Error("Error at test submission");
+            })
+        } catch (error) {
+            res.status(404);
+            res.send(decoded.id)
+            throw new Error("User not found");
+        }
+        
+    }
+    else{
+        res.send(401);
+        throw new Error("Invalid token for test submission");
+    }
+})
+
+export { registerUser, loginUser, getSubjects, getTests, getIndividualTest, submitTestAnswers }
