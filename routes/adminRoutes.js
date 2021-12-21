@@ -8,7 +8,7 @@ const adminRoute = express.Router();
 adminRoute.post("/register", registerUser);
 adminRoute.get("/login", loginUser);
 adminRoute.get("/getSubjects",protectRoute,getSubjects);
-adminRoute.get("/getTests",protectRoute, getTests);
+adminRoute.post("/getTests",protectRoute, getTests);
 adminRoute.post("/createTest",protectRoute,createTest);
 adminRoute.post("/createSubject",protectRoute,createSubject);
 

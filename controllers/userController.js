@@ -58,10 +58,10 @@ const getSubjects = asyncHandler(async(req,res)=>{
 
 const getTests = asyncHandler(async(req,res)=>{
     const { subject } = req.body;
-
+    
     const tests = await Test.find({subjectName:subject})
 
-    if(tests.length > 0){
+    if(tests){
         res.send(tests);
     }
     else{
