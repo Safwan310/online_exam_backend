@@ -24,22 +24,16 @@ const registerUser = asyncHandler(async(req,res)=>{
 })
 
 const loginUser = asyncHandler(async(req,res)=>{
-    const { email,password,isAdmin } = req.body;
+    const { email,password } = req.body;
 
     const user = await User.findOne({email: email})
     if(user && await user.matchPassword(password)){
-        if((req.originalUrl.startsWith("/admin")&&isAdmin)||
-        (req.originalUrl.startsWith("/users")&&!(isAdmin)))
-        {res.json({
+        res.json({
             name: user.name,
             email: user.email,
+            isAdmin: user.isAdmin,
             token: generateToken(user._id)
         })}
-        else{
-            res.status(401);
-            res.send("Unauthorised");
-        }
-    }
     else{
         res.status(401);
         res.send("Unauthorised");
