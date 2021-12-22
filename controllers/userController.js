@@ -133,4 +133,19 @@ const getMarks = asyncHandler(async(req,res)=>{
     }
 })
 
-export { registerUser, loginUser, getSubjects, getTests, getIndividualTest, submitTestAnswers, getMarks }
+const getProfile = asyncHandler(async(req,res)=>{
+    const { id } = req.body;
+
+    const user = await User.findById(id)
+
+    if(user){
+        res.send(user);
+        res.status(200);
+    }
+    else{
+        res.status(404);
+        throw new Error("User not found");
+    }
+})
+
+export { registerUser, loginUser, getSubjects, getTests, getIndividualTest, submitTestAnswers, getMarks, getProfile }
