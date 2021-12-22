@@ -29,6 +29,7 @@ const loginUser = asyncHandler(async(req,res)=>{
     const user = await User.findOne({email: email})
     if(user && await user.matchPassword(password)){
         res.json({
+            id:user._id,
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin,
@@ -117,4 +118,19 @@ const submitTestAnswers = asyncHandler(async(req,res)=>{
     }
 })
 
-export { registerUser, loginUser, getSubjects, getTests, getIndividualTest, submitTestAnswers }
+const getMarks = asyncHandler(async(req,res)=>{
+    const { id } = req.body;
+
+    const marks = await Marks.find({studentId:id})
+
+    if(marks){
+        res.send(marks);
+        res.status(200);
+    }
+    else{
+        res.status(404);
+        throw new Error("Student not found");
+    }
+})
+
+export { registerUser, loginUser, getSubjects, getTests, getIndividualTest, submitTestAnswers, getMarks }

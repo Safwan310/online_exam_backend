@@ -1,6 +1,7 @@
 import Test from "../models/test.model.js"
 import Subject from "../models/subject.model.js"
 import asyncHandler from "express-async-handler";
+import Marks from "../models/marks.model.js";
 //Check for pre existing tests
 const createTest = asyncHandler(async (req, res) => {
         const newTest = new Test({
@@ -29,4 +30,19 @@ const createSubject = asyncHandler(async (req, res) => {
         })
 })
 
-export { createSubject,createTest }
+const getMarks = asyncHandler(async(req,res)=>{
+    const { subject,testName } = req.body;
+
+    const markList = await Marks.find({$and:[{subjectName:subject},{testName:testName}]})
+
+    if(markList){
+        res.send(markList);
+        res.status(200);
+    }
+    else{
+        res.status(404);
+        throw new Error("No such test exists for the given subject");
+    }
+})
+
+export { createSubject,createTest,getMarks }
