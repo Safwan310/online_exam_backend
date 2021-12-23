@@ -5,6 +5,7 @@ import Subject from "../models/subject.model.js";
 import Test from "../models/test.model.js";
 import jwt from "jsonwebtoken";
 import Marks from "../models/marks.model.js";
+import Issue from "../models/issue.model.js";
 //CHECK FOR PRE EXISTING USERZZ
 const registerUser = asyncHandler(async(req,res)=>{
     const newUser = new User({
@@ -148,4 +149,23 @@ const getProfile = asyncHandler(async(req,res)=>{
     }
 })
 
-export { registerUser, loginUser, getSubjects, getTests, getIndividualTest, submitTestAnswers, getMarks, getProfile }
+const submitIssue = asyncHandler(async(req,res)=>{
+    const { testName,subjectName,studentName,issue } = req.body;
+
+    let newIssue = new Issue({
+        postedBy:studentName,
+        subjectName:subjectName,
+        testName:testName,
+        issue:issue
+    })
+
+    newIssue
+    .save()
+    .then((data)=>{res.send(data)})
+    .catch((err)=>{
+        res.status(500);
+        throw new Error("Internal error: At issue submission");
+    })
+})
+
+export { registerUser, loginUser, getSubjects, getTests, getIndividualTest, submitTestAnswers, getMarks, getProfile, submitIssue }
