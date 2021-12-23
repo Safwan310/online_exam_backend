@@ -2,6 +2,7 @@ import Test from "../models/test.model.js"
 import Subject from "../models/subject.model.js"
 import asyncHandler from "express-async-handler";
 import Marks from "../models/marks.model.js";
+import Issue from "../models/issue.model.js";
 //Check for pre existing tests
 const createTest = asyncHandler(async (req, res) => {
         const newTest = new Test({
@@ -45,4 +46,17 @@ const getMarks = asyncHandler(async(req,res)=>{
     }
 })
 
-export { createSubject,createTest,getMarks }
+const getIssues = asyncHandler(async(req,res)=>{
+    const issues = await Issue.find({});
+
+    if(issues){
+        res.status(200);
+        res.send(issues);
+    }
+    else{
+        res.status(500);
+        throw new Error("Internal error at fetching issus on admin side");
+    }
+})
+
+export { createSubject,createTest,getMarks,getIssues }
