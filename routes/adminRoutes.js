@@ -1,17 +1,17 @@
 import express from "express";
 import { getProfile, getSubjects, getTests, loginUser, registerUser } from "../controllers/userController.js";
 import { createTest, createSubject, getMarks, getIssues } from "../controllers/adminController.js";
-import { protectRoute } from "../middleware/authMiddleware.js";
+import { protectAdminRoute } from "../middleware/authMiddleware.js";
 
 const adminRoute = express.Router();
 
 adminRoute.post("/register", registerUser);
 adminRoute.get("/login", loginUser);
-adminRoute.get("/getSubjects", protectRoute, getSubjects);
-adminRoute.post("/getTests", protectRoute, getTests);
-adminRoute.post("/createTest", protectRoute, createTest);
-adminRoute.post("/createSubject", protectRoute, createSubject);
-adminRoute.post("/getMarks",protectRoute,getMarks);
-adminRoute.post("/profile",protectRoute,getProfile)
-adminRoute.get("/issues",protectRoute,getIssues);
+adminRoute.get("/getSubjects", protectAdminRoute, getSubjects);
+adminRoute.post("/getTests", protectAdminRoute, getTests);
+adminRoute.post("/createTest", protectAdminRoute, createTest);
+adminRoute.post("/createSubject", protectAdminRoute, createSubject);
+adminRoute.post("/getMarks",protectAdminRoute,getMarks);
+adminRoute.post("/profile",protectAdminRoute,getProfile)
+adminRoute.get("/issues",protectAdminRoute,getIssues);
 export default adminRoute;
